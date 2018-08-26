@@ -7,7 +7,7 @@ export default class NavBar extends Component {
         <nav className="site-navbar navbar fixed-top navbar-expand-md navbar-light bg-blue">
           <div className="navbar-header">
             <a className="navbar-brand" href="">
-              <span className="brand-name hidden-fold">Code Snipping</span>
+              <span className="brand-name hidden-fold">CodeBox</span>
             </a>
 
             <button
