@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import NavBar from "./components/NavBar/NavBar.jsx";
 import SideBar from "./components/SideBar/SideBar.jsx";
 import Slide from "@material-ui/core/Slide";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
+import CodeSnippet from "./components/CodeSnippet/CodeSnippet";
 class App extends Component {
   constructor(props) {
     super(props);
@@ -22,7 +23,8 @@ class App extends Component {
             <main className="site-main">
               <div className="site-content">
                 <Switch>
-                  <Route exact path="/dashboard" />
+                  <Route exact path="/dashboard" component={CodeSnippet} />
+                  <Redirect exact from="/" to="/dashboard" />
                 </Switch>
               </div>
             </main>
