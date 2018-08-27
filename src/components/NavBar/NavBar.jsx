@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 
-export default class NavBar extends Component {
+class NavBar extends Component {
+  componentDidMount() {
+    console.log(this.props);
+  }
   render() {
     return (
       <React.Fragment>
@@ -250,16 +253,15 @@ export default class NavBar extends Component {
                     src="../assets/global/images/user-img.png"
                     alt="true"
                   />
-                  <span className="nav-text hidden-sm-down ml-2">Daniel</span>
+                  <span className="nav-text hidden-sm-down ml-2">
+                    {this.props.user.userName}
+                  </span>
                   <i className="nav-caret hidden-sm-down zmdi zmdi-hc-sm zmdi-chevron-down" />
                 </a>
                 <div
                   className="dropdown-menu dropdown-menu-right p-0"
                   data-plugin="dropdownCaret"
                 >
-                  <a className="dropdown-item dropdown-menu-cap">
-                    Daniel Alexander
-                  </a>
                   <a className="dropdown-item">
                     <i className="fa fa-user-o mr-3" />
                     <span>My Profile</span>
@@ -290,3 +292,4 @@ export default class NavBar extends Component {
     );
   }
 }
+export default NavBar;
