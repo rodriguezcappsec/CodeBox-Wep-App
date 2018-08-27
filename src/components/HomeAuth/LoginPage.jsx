@@ -11,11 +11,18 @@ class LoginPage extends Component {
     this.state = {
       api: apiUrl,
       signedUser: {
-        user: "",
         email: "",
         password: ""
       },
-      islogged: false
+      currentUser: "",
+
+      islogged: false,
+      signUp: {
+        userName: "",
+        email: "",
+        password: "",
+        password_confirmation: ""
+      }
     };
   }
   loginRequest = onSubmit => {
@@ -27,38 +34,58 @@ class LoginPage extends Component {
       }
     })
       .then(user => {
-        const loggedUser = { ...this.state.signedUser };
-        loggedUser.user = user.data;
+        let loggedUser = { ...this.state.signedUser };
+        // loggedUser.currentUser = user.data;
+        this.setState({ currentUser: user.data });
         this.setState({ islogged: true });
         this.setState({ signedUser: loggedUser });
-        console.log(this.state.signedUser.user);
       })
       .catch(exe => {
         console.log(exe);
       });
   };
+  registerRequest = onSubmit => {
+    onSubmit.preventDefault();
+    Axios.post(`${this.state.api}/sign-up`, {
+      credentials: {
+        userName: this.state.signUp.userName,
+        profilePicture: "",
+        email: this.state.signUp.email,
+        password: this.state.signUp.password,
+        password_confirmation: this.state.signUp.password_confirmation
+      }
+    })
+      .then(user => {
+        console.log("registered");
+      })
+      .catch(exe => {
+        console.log(exe);
+      });
+  };
+  handleNewUser = ({ currentTarget: input }) => {
+    let newUser = { ...this.state.signUp };
+    newUser[input.name] = input.value;
+    this.setState({ signUp: newUser });
+    console.log(newUser);
+  };
   handleInput = ({ currentTarget: input }) => {
     let user = { ...this.state.signedUser };
     user[input.name] = input.value;
     this.setState({ signedUser: user });
-    console.log(this.state.signedUser);
   };
   conditionalRender = () => {
     if (!this.state.islogged) {
       return (
-        <div>
-          <LoginForms
-            loginRequest={this.loginRequest}
-            handleInput={this.handleInput}
-          />
-        </div>
+        <LoginForms
+          loginRequest={this.loginRequest}
+          handleInput={this.handleInput}
+          handleNewUser={this.handleNewUser}
+          registerRequest={this.registerRequest}
+        />
       );
+    } else {
+      return <App loggedUser={this.state.currentUser} />;
     }
-    return (
-      <React.Fragment>
-        <App user={this.state.signedUser.user} />
-      </React.Fragment>
-    );
   };
 
   render() {
