@@ -5,27 +5,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="theme-color" content="#000000">
-  <!--
-      manifest.json provides metadata used when your web app is added to the
-      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
-    -->
+
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
   <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-  <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
+  <link rel="stylesheet" href="assets/examples/css/pages/login.css">
+  <link rel="stylesheet" href="assets/vendor/owl-carousel/owl.carousel.css">
   <link rel="stylesheet" href="assets/vendor/css/hamburgers.css">
   <link rel="stylesheet" href="assets/vendor/bower_components/perfect-scrollbar/css/perfect-scrollbar.min.css">
   <link rel="stylesheet" href="assets/vendor/bower_components/switchery/dist/switchery.min.css">
   <link rel="stylesheet" href="assets/vendor/bower_components/sweetalert/dist/sweetalert.css">
+  <link rel="stylesheet" href="assets/vendor/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.css">
   <link rel="stylesheet" href="assets/vendor/css/bootstrap.css">
   <link rel="stylesheet" href="assets/site.css">
+  <!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
+
 
 
 
@@ -34,7 +28,16 @@
   <link rel="stylesheet" href="assets/vendor/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600">
   <script src="assets/vendor/bower_components/breakpoints.js/dist/breakpoints.min.js"></script>
-  <script>Breakpoints({ xs: { min: 0, max: 575 }, sm: { min: 576, max: 767 }, md: { min: 768, max: 991 }, lg: { min: 992, max: 1199 }, xl: { min: 1200, max: Infinity } });</script>
+  <script>
+    Breakpoints({
+      xs: { min: 0, max: 575 },
+      sm: { min: 576, max: 767 },
+      md: { min: 768, max: 991 },
+      lg: { min: 992, max: 1199 },
+      xl: { min: 1200, max: Infinity }
+    });
+  </script>
+
   <title>CodeBox</title>
 </head>
 
@@ -42,7 +45,9 @@
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>
-  <div class="menubar-left menubar-dark dashboard dashboard-v1" id="root"></div>
+  <div id="root">
+
+  </div>
   <!-- core plugins -->
   <script src="assets/vendor/bower_components/jquery/dist/jquery.min.js"></script>
   <script src="assets/vendor/bower_components/popper.js/dist/umd/popper.min.js"></script>
@@ -54,11 +59,13 @@
   <script src="assets/vendor/bower_components/waypoints/lib/shortcuts/sticky.min.js"></script>
   <script src="assets/vendor/bower_components/counterup/jquery.counterup.min.js"></script>
   <script src="assets/vendor/bower_components/sweetalert/dist/sweetalert.min.js"></script>
+
+
   <script src="assets/vendor/js/jquery.sparkline.min.js"></script>
   <script src="assets/global/js/plugins/dropdown-caret.js"></script>
   <script src="assets/global/js/plugins/firstlitter.js"></script>
   <script src="assets/global/js/plugins/video-modal.js"></script>
-  
+
   <!-- plugins for the current page -->
   <script src="assets/vendor/bower_components/chartist/dist/chartist.min.js"></script>
   <script src="assets/vendor/jvectormap/jquery-jvectormap.min.js"></script>
@@ -66,14 +73,16 @@
   <script src="assets/vendor/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js"></script>
   <script src="assets/vendor/bower_components/peity/jquery.peity.min.js"></script>
   <script src="assets/vendor/owl-carousel/owl.carousel.min.js"></script>
-  
-  
+
+
   <!-- site-wide scripts -->
   <script src="assets/global/js/main.js"></script>
   <script src="js/site.js"></script>
   <script src="js/navbar.js"></script>
   <script src="js/menubar.js"></script>
-  
+  <script src="assets/vendor/owl-carousel/owl.carousel.min.js"></script>
+  <script src="assets/examples/js/pages/login.js"></script>
+
 </body>
 
 </html>
