@@ -15,13 +15,6 @@ export default class SideBar extends Component {
                   <span className="menu-text">Dashboard</span>
                 </Link>
               </li>
-              <li>
-                <Link to="/other">
-                  <i className="menu-icon zmdi zmdi-pages zmdi-hc-lg" />
-                  <span className="menu-text">Pages</span>
-                  <i className="menu-caret zmdi zmdi-hc-sm zmdi-chevron-right" />
-                </Link>
-              </li>
             </ul>
             {/* /.site-menu */}
           </div>
