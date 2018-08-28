@@ -74,10 +74,10 @@ export default class CodeSnippet extends Component {
         Authorization: "Bearer " + this.state.user.token
       }
     }).then(codes => {
-      console.log(codes.data);
       let code = codes.data.codes.filter(
-        code => code._id !== this.state.user._id
+        code => code.userID === this.state.user._id
       );
+      console.log(code);
       let listCopy = { ...this.state.list };
       listCopy.codeList = code;
       this.setState({ list: listCopy });
@@ -227,16 +227,8 @@ export default class CodeSnippet extends Component {
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                {/* <button
-                  type="button"
-                  className="close"
-                  data-dismiss="modal"
-                  aria-div="Close"
-                >
-                  <span aria-hidden="true">
-                    <i className="zmdi zmdi-close" />
-                  </span>
-                </button> */}
+                <p color="secondary">20 character max for the title</p>
+
                 <div className="task-pickers" />
               </div>
               {/* /.modal-header */}
@@ -252,6 +244,7 @@ export default class CodeSnippet extends Component {
                       placeholder="Snippet Name"
                       name="snippetname"
                       type="text"
+                      maxLength="20"
                       onChange={this.snippetName}
                     />
                   </div>

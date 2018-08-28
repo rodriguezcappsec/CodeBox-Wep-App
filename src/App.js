@@ -9,6 +9,7 @@ class App extends Component {
     super(props);
     this.state = { user: this.props.loggedUser.user };
   }
+  
   render() {
     return (
       <React.Fragment>
@@ -21,18 +22,20 @@ class App extends Component {
               <SideBar />
             </Slide>
             <main className="site-main">
-              <div className="site-content">
-                <Switch>
-                  <Route
-                    exact
-                    path="/dashboard"
-                    render={props => (
-                      <CodeSnippet {...props} user={this.state.user} />
-                    )}
-                  />
-                  <Redirect exact from="/" to="/dashboard" />
-                </Switch>
-              </div>
+              {/* <Slide in={true} mountOnEnter unmountOnExit direction="up"> */}
+                <div className="site-content">
+                  <Switch>
+                    <Route
+                      exact
+                      path="/dashboard"
+                      render={props => (
+                        <CodeSnippet {...props} user={this.state.user} />
+                      )}
+                    />
+                    <Redirect exact from="/" to="/dashboard" />
+                  </Switch>
+                </div>
+              {/* </Slide> */}
             </main>
           </div>
         </div>
