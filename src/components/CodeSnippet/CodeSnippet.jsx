@@ -32,7 +32,7 @@ export default class CodeSnippet extends Component {
         lineNumbers: true
       },
       list: {
-        codeList: "",
+        codeList: [],
         selectedSnippet: ""
       }
     };
@@ -42,25 +42,33 @@ export default class CodeSnippet extends Component {
   };
   createSnippet = onsubmit => {
     onsubmit.preventDefault();
-    Axios.post(`${apiUrl}/codes`, {
-      headers: {
-        Authorization: "Bearer " + this.state.user.token
+    let copy = { ...this.state.code };
+    copy = this.state.code.replace(/"/g, "'");
+    // copy = copy.replace(/\n/g, " ");
+    Axios.post(
+      `${apiUrl}/codes`,
+      {
+        code: {
+          title: this.state.snippetname,
+          snippet: `${copy}`,
+          theme: this.state.options.theme,
+          language: this.state.options.mode
+        }
       },
-      code: {
-        title: this.state.snippetname,
-        snippet: this.state.code,
-        theme: this.state.options.theme,
-        language: this.state.options.mode
+      {
+        headers: {
+          Authorization: "Bearer " + this.state.user.token
+        }
       }
-    })
+    )
       .then(code => {
-        console.log(code);
+        this.renderCodeList();
       })
       .catch(exe => {
         console.log(exe);
       });
   };
-  componentDidMount() {
+  renderCodeList = () => {
     Axios.get(`${apiUrl}/codes`, {
       headers: {
         Authorization: "Bearer " + this.state.user.token
@@ -68,10 +76,15 @@ export default class CodeSnippet extends Component {
     }).then(codes => {
       console.log(codes.data);
       let code = codes.data.codes.filter(
-        code => code._id === this.state.user._id
+        code => code._id !== this.state.user._id
       );
-      console.log(code);
+      let listCopy = { ...this.state.list };
+      listCopy.codeList = code;
+      this.setState({ list: listCopy });
     });
+  };
+  componentDidMount() {
+    this.renderCodeList();
   }
   pickTheme = ({ target: input }) => {
     const options = { ...this.state.options };
@@ -113,7 +126,43 @@ export default class CodeSnippet extends Component {
                 </div>
                 <hr className="m-0" />
                 <div className="projects-list">
-                  <div className="media selected">
+                  {this.state.list.codeList.map((code, key) => {
+                    return (
+                      <div className="media" key={key} id={code._id}>
+                        {/* <div
+                          className="avatar avatar-circle avatar-md project-icon"
+                          data-plugin="firstLitter"
+                          data-target="#project-1"
+                        /> */}
+                        <div className="media-body">
+                          <h6 className="project-name" id="project-1">
+                            {code.title}
+                          </h6>
+                        </div>
+                        <div className="row">
+                          <div className="col">
+                            <input
+                              name="submit"
+                              defaultValue="edit"
+                              id={code._id}
+                              className="btn btn-warning btn-small"
+                              type="submit"
+                            />
+                          </div>
+                          <div className="col">
+                            <input
+                              name="submit"
+                              defaultValue="edit"
+                              id={code._id}
+                              className="btn btn-danger btn-small"
+                              type="submit"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {/* <div className="media selected">
                     <div
                       className="avatar avatar-circle avatar-md project-icon"
                       data-plugin="firstLitter"
@@ -123,11 +172,9 @@ export default class CodeSnippet extends Component {
                       <h6 className="project-name" id="project-1">
                         Android App Project
                       </h6>
-                      <small className="project-detail">
-                        Task: programming modules
-                      </small>
                     </div>
-                  </div>
+                  </div> */}
+
                   {/* /.media */}
                 </div>
                 {/* /.projects-list */}
@@ -194,7 +241,7 @@ export default class CodeSnippet extends Component {
               </div>
               {/* /.modal-header */}
 
-              <form onSubmit={this.createSnippet} id="Code-Snippet-Form">
+              <form onSubmit={this.createSnippet} name="createNippetForm">
                 <div className="modal-body">
                   <div className="task-name-wrap">
                     <span>
