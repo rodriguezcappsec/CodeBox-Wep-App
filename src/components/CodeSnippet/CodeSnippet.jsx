@@ -3,20 +3,45 @@ import { Controlled as CodeMirror } from "react-codemirror2";
 import "codemirror/lib/codemirror.css";
 require("codemirror/mode/xml/xml.js");
 require("codemirror/mode/javascript/javascript.js");
+require("codemirror/mode/ruby/ruby.js");
+require("codemirror/mode/sass/sass.js");
+require("codemirror/mode/shell/shell.js");
+require("codemirror/mode/python/python.js");
+require("codemirror/mode/sql/sql.js");
+require("codemirror/mode/sas/sas.js");
+require("codemirror/mode/ruby/ruby.js");
 require("codemirror/theme/material.css");
-require("codemirror/theme/neat.css");
+require("codemirror/theme/midnight.css");
+require("codemirror/theme/monokai.css");
+require("codemirror/theme/xq-light.css");
+require("codemirror/theme/cobalt.css");
+require("codemirror/theme/dracula.css");
+
 export default class CodeSnippet extends Component {
   constructor(props) {
     super(props);
     this.state = {
       code: "",
       options: {
-        mode: "javascript",
-        theme: "material",
+        mode: "",
+        theme: "",
         lineNumbers: true
       }
     };
   }
+
+  pickTheme = ({ target: input }) => {
+    const options = { ...this.state.options };
+    options.theme = input.value;
+    console.log(options.theme);
+    this.setState({ options });
+  };
+  pickCode = ({ target: input }) => {
+    const options = { ...this.state.options };
+    options.mode = input.value;
+    console.log(options.mode);
+    this.setState({ options });
+  };
   render() {
     return (
       <React.Fragment>
@@ -44,7 +69,7 @@ export default class CodeSnippet extends Component {
                 </div>
                 <hr className="m-0" />
                 <div className="projects-list">
-                  <div className="media">
+                  <div className="media selected">
                     <div
                       className="avatar avatar-circle avatar-md project-icon"
                       data-plugin="firstLitter"
@@ -56,64 +81,6 @@ export default class CodeSnippet extends Component {
                       </h6>
                       <small className="project-detail">
                         Task: programming modules
-                      </small>
-                    </div>
-                  </div>
-                  {/* /.media */}
-                  <div className="media selected">
-                    <div
-                      className="avatar avatar-circle avatar-md project-icon"
-                      data-plugin="firstLitter"
-                      data-target="#project-2"
-                    />
-                    <div className="media-body">
-                      <h6 className="project-name" id="project-2">
-                        Luxury Project
-                      </h6>
-                      <small className="project-detail">Task: UI design</small>
-                    </div>
-                  </div>
-                  {/* /.media */}
-                  <div className="media">
-                    <div
-                      className="avatar avatar-circle avatar-md project-icon"
-                      data-plugin="firstLitter"
-                      data-target="#project-3"
-                    />
-                    <div className="media-body">
-                      <h6 className="project-name" id="project-3">
-                        Windows Phone App
-                      </h6>
-                      <small className="project-detail">Task: deployment</small>
-                    </div>
-                  </div>
-                  {/* /.media */}
-                  <div className="media">
-                    <div
-                      className="avatar avatar-circle avatar-md project-icon"
-                      data-plugin="firstLitter"
-                      data-target="#project-4"
-                    />
-                    <div className="media-body">
-                      <h6 className="project-name" id="project-4">
-                        IOS Mobile App
-                      </h6>
-                      <small className="project-detail">finished project</small>
-                    </div>
-                  </div>
-                  {/* /.media */}
-                  <div className="media">
-                    <div
-                      className="avatar avatar-circle avatar-md project-icon"
-                      data-plugin="firstLitter"
-                      data-target="#project-5"
-                    />
-                    <div className="media-body">
-                      <h6 className="project-name" id="project-5">
-                        Digital Recording Project
-                      </h6>
-                      <small className="project-detail">
-                        in analysis phase
                       </small>
                     </div>
                   </div>
@@ -143,14 +110,14 @@ export default class CodeSnippet extends Component {
             {/* /.app-main-header */}
             <div className="app-main-content">
               <div className="project-tasks">
-                <div className="project-task">
+                {/* <div className="project-task">
                   <div className="checkbox checkbox-circle checkbox-lg">
                     <input id="pj-task-1" type="checkbox" />
                     <label htmlFor="pj-task-1">
                       Project initiation and proposal preparing
                     </label>
                   </div>
-                </div>
+                </div> */}
               </div>
               {/* /.project-tasks */}
             </div>
@@ -182,6 +149,7 @@ export default class CodeSnippet extends Component {
                 <div className="task-pickers" />
               </div>
               {/* /.modal-header */}
+
               <form id="Code-Snippet-Form">
                 <div className="modal-body">
                   <div className="task-name-wrap">
@@ -198,23 +166,57 @@ export default class CodeSnippet extends Component {
                   <div className="row">
                     <div className="col">
                       <div className="form-group">
-                        <select name="country" className="form-control">
+                        <select
+                          name="theme"
+                          className="form-control"
+                          onChange={this.pickTheme}
+                        >
                           <option defaultValue>Theme</option>
-                          <option value="egypt">Egypt</option>
+                          {[
+                            "xq-light",
+                            "monokai",
+                            "material",
+                            "dracula",
+                            "cobalt",
+                            "midnight"
+                          ].map((value, key) => (
+                            <option value={value} key={key}>
+                              {value}
+                            </option>
+                          ))}
+                          {/* <option value="egypt"> xq-dark</option>
                           <option value="usa">USA</option>
                           <option value="germany">Germany</option>
-                          <option value="japan">Japan</option>
+                          <option value="japan">Japan</option> */}
                         </select>
                       </div>
                     </div>
                     <div className="col">
                       <div className="form-group">
-                        <select name="country" className="form-control">
-                          <option defaultValue>Language</option>
-                          <option value="egypt">Egypt</option>
+                        <select
+                          name="mode"
+                          className="form-control"
+                          onChange={this.pickCode}
+                        >
+                          <option defaultValue>Languages</option>
+                          {[
+                            "javascript",
+                            "ruby",
+                            "saas",
+                            "sas",
+                            "shell",
+                            "sql",
+                            "xml",
+                            "python"
+                          ].map((language, key) => (
+                            <option value={language} key={key}>
+                              {language}
+                            </option>
+                          ))}
+                          {/* <option value="egypt">Egypt</option>
                           <option value="usa">USA</option>
                           <option value="germany">Germany</option>
-                          <option value="japan">Japan</option>
+                          <option value="japan">Japan</option> */}
                         </select>
                       </div>
                     </div>

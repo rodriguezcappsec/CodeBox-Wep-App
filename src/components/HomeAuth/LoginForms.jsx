@@ -16,7 +16,7 @@ const registerModal = props => {
             <div className="text-center" style={{ marginBottom: "4.5rem" }}>
               <h4>Register</h4>
             </div>
-            <form >
+            <form>
               <div
                 className="wizard p-4"
                 id="modal-wizard"
@@ -165,9 +165,8 @@ const LoginForms = props => {
             </span>
           </div>
           <div className="row">
-            <div className="col-xs-8" />
             {/* /.col */}
-            <div className="col-xs-4">
+            <div className="col">
               <input
                 name="submit"
                 defaultValue="Sign In"
@@ -176,19 +175,28 @@ const LoginForms = props => {
                 type="submit"
               />{" "}
             </div>
+            <div className="col">
+              <button
+                className="btn btn-secondary btn-block btn-flat "
+                data-toggle="modal"
+                data-target="#wizard-modal"
+              >
+                Register
+            </button>
+            </div>
             {/* /.col */}
           </div>
         </form>{" "}
         <br />
-        <button
-          className="btn btn-primary "
-          data-toggle="modal"
-          data-target="#wizard-modal"
-        >
-          Show Wizard
-        </button>
+        <div className="row">
+          
+          <div className="col">
+          </div>
+        </div>
+        {registerModal(props)}
+
       </div>
-      {registerModal(props)}
+
       {/* /.login-box-body */}
     </div>
   );
