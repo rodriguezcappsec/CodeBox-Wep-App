@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import "codemirror/lib/codemirror.css";
+import Axios from "axios";
+import apiUrl from "../../endPoint.js";
 require("codemirror/mode/xml/xml.js");
 require("codemirror/mode/javascript/javascript.js");
 require("codemirror/mode/ruby/ruby.js");
@@ -21,15 +23,56 @@ export default class CodeSnippet extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: this.props.user,
       code: "",
+      snippetname: "",
       options: {
         mode: "",
         theme: "",
         lineNumbers: true
+      },
+      list: {
+        codeList: "",
+        selectedSnippet: ""
       }
     };
   }
-
+  snippetName = ({ currentTarget: input }) => {
+    this.setState({ snippetname: input.value });
+  };
+  createSnippet = onsubmit => {
+    onsubmit.preventDefault();
+    Axios.post(`${apiUrl}/codes`, {
+      headers: {
+        Authorization: "Bearer " + this.state.user.token
+      },
+      code: {
+        title: this.state.snippetname,
+        snippet: this.state.code,
+        theme: this.state.options.theme,
+        language: this.state.options.mode
+      }
+    })
+      .then(code => {
+        console.log(code);
+      })
+      .catch(exe => {
+        console.log(exe);
+      });
+  };
+  componentDidMount() {
+    Axios.get(`${apiUrl}/codes`, {
+      headers: {
+        Authorization: "Bearer " + this.state.user.token
+      }
+    }).then(codes => {
+      console.log(codes.data);
+      let code = codes.data.codes.filter(
+        code => code._id === this.state.user._id
+      );
+      console.log(code);
+    });
+  }
   pickTheme = ({ target: input }) => {
     const options = { ...this.state.options };
     options.theme = input.value;
@@ -42,6 +85,7 @@ export default class CodeSnippet extends Component {
     console.log(options.mode);
     this.setState({ options });
   };
+
   render() {
     return (
       <React.Fragment>
@@ -150,7 +194,7 @@ export default class CodeSnippet extends Component {
               </div>
               {/* /.modal-header */}
 
-              <form id="Code-Snippet-Form">
+              <form onSubmit={this.createSnippet} id="Code-Snippet-Form">
                 <div className="modal-body">
                   <div className="task-name-wrap">
                     <span>
@@ -159,7 +203,9 @@ export default class CodeSnippet extends Component {
                     <input
                       className="task-name-field"
                       placeholder="Snippet Name"
+                      name="snippetname"
                       type="text"
+                      onChange={this.snippetName}
                     />
                   </div>
                   <hr />
@@ -240,6 +286,17 @@ export default class CodeSnippet extends Component {
                       defaultValue={""}
                     /> */}
                     </CodeMirror>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col">
+                    <input
+                      name="submit"
+                      defaultValue="Create Snippet"
+                      id="submit"
+                      className="btn btn-primary btn-block btn-flat"
+                      type="submit"
+                    />
                   </div>
                 </div>
               </form>

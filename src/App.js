@@ -23,7 +23,13 @@ class App extends Component {
             <main className="site-main">
               <div className="site-content">
                 <Switch>
-                  <Route exact path="/dashboard" component={CodeSnippet} />
+                  <Route
+                    exact
+                    path="/dashboard"
+                    render={props => (
+                      <CodeSnippet {...props} user={this.state.user} />
+                    )}
+                  />
                   <Redirect exact from="/" to="/dashboard" />
                 </Switch>
               </div>

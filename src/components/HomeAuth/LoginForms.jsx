@@ -123,9 +123,10 @@ const LoginForms = props => {
   return (
     <div className="login-box">
       <div className="login-logo">
-        <img // src="../../../public/favicon.ico"
+        {/* <img // src="../../../public/favicon.ico"
           alt="CodeBox"
-        />
+        /> */}
+        <p>CodeBox</p>
       </div>
       {/* /.login-logo */}
       <div className="login-box-body">
