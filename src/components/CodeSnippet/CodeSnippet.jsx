@@ -1,19 +1,35 @@
 import React, { Component } from "react";
-
+import { Controlled as CodeMirror } from "react-codemirror2";
+import "codemirror/lib/codemirror.css";
+require("codemirror/mode/xml/xml.js");
+require("codemirror/mode/javascript/javascript.js");
+require("codemirror/theme/material.css");
+require("codemirror/theme/neat.css");
 export default class CodeSnippet extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      code: "",
+      options: {
+        mode: "javascript",
+        theme: "material",
+        lineNumbers: true
+      }
+    };
+  }
   render() {
     return (
       <React.Fragment>
         <div className="app-wrapper">
           <div className="app-panel" id="app-panel">
-            <div className="app-search">
+            {/* <div className="app-search">
               <input
                 className="search-field"
                 placeholder="Search"
                 type="search"
               />
               <i className="search-icon fa fa-search" />
-            </div>
+            </div> */}
             {/* /.app-search */}
             <div className="app-panel-inner">
               <div className="scroll-container">
@@ -23,7 +39,7 @@ export default class CodeSnippet extends Component {
                     data-toggle="modal"
                     data-target="#projects-task-modal"
                   >
-                    ADD NEW TASK
+                    NEW CODE SNIPPET
                   </button>
                 </div>
                 <hr className="m-0" />
@@ -110,7 +126,6 @@ export default class CodeSnippet extends Component {
             {/* /.app-panel-inner  */}
             {/* panel-toggle button */}
             <a
-              href="#"
               className="app-panel-toggle"
               data-toggle="class"
               data-target="#app-panel"
@@ -123,9 +138,7 @@ export default class CodeSnippet extends Component {
           {/* /.app-panel */}
           <div className="app-main">
             <div className="app-main-header">
-              <h5 className="app-main-heading text-center">
-                Code Snippets
-              </h5>
+              <h5 className="app-main-heading text-center">Code Snippets</h5>
             </div>
             {/* /.app-main-header */}
             <div className="app-main-content">
@@ -150,13 +163,13 @@ export default class CodeSnippet extends Component {
           id="projects-task-modal"
           tabIndex={-1}
           role="dialog"
-          aria-divledby="myModaldiv"
+          // aria-divledby="myModaldiv"
           aria-hidden="true"
         >
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <button
+                {/* <button
                   type="button"
                   className="close"
                   data-dismiss="modal"
@@ -165,57 +178,69 @@ export default class CodeSnippet extends Component {
                   <span aria-hidden="true">
                     <i className="zmdi zmdi-close" />
                   </span>
-                </button>
-                <div className="task-pickers">
-                  <div className="task-field-picker task_username_picker">
-                    <div htmlFor="task_username">
-                      <i className="zmdi zmdi-plus" />
-                    </div>
-                    <input
-                      id="task_username"
-                      name="task_username"
-                      defaultValue
-                      placeholder="Username"
-                      type="text"
-                    />
-                  </div>
-                  <div className="task-field-picker task_date_picker">
-                    <div htmlFor="task_due_date">
-                      <i className="zmdi zmdi-calendar" />
-                    </div>
-                    <input
-                      id="task_due_date"
-                      name="task_due_date"
-                      defaultValue
-                      placeholder="Due Date"
-                      type="text"
-                    />
-                  </div>
-                </div>
+                </button> */}
+                <div className="task-pickers" />
               </div>
               {/* /.modal-header */}
-              <div className="modal-body">
-                <div className="task-name-wrap">
-                  <span>
-                    <i className="zmdi zmdi-check" />
-                  </span>
-                  <input
-                    className="task-name-field"
-                    placeholder="Task Name"
-                    type="text"
-                  />
+              <form id="Code-Snippet-Form">
+                <div className="modal-body">
+                  <div className="task-name-wrap">
+                    <span>
+                      <i className="zmdi zmdi-check" />
+                    </span>
+                    <input
+                      className="task-name-field"
+                      placeholder="Snippet Name"
+                      type="text"
+                    />
+                  </div>
+                  <hr />
+                  <div className="row">
+                    <div className="col">
+                      <div className="form-group">
+                        <select name="country" className="form-control">
+                          <option defaultValue>Theme</option>
+                          <option value="egypt">Egypt</option>
+                          <option value="usa">USA</option>
+                          <option value="germany">Germany</option>
+                          <option value="japan">Japan</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="form-group">
+                        <select name="country" className="form-control">
+                          <option defaultValue>Language</option>
+                          <option value="egypt">Egypt</option>
+                          <option value="usa">USA</option>
+                          <option value="germany">Germany</option>
+                          <option value="japan">Japan</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="task-desc-wrap">
+                    <CodeMirror
+                      value={this.state.code}
+                      options={this.state.options}
+                      onBeforeChange={(editor, data, code) => {
+                        this.setState({ code });
+                      }}
+
+                      // onChange={this.updateCode}
+                    >
+                      {/* <textarea
+                      className="task-desc-field"
+                      name
+                      id
+                      placeholder="Description"
+                      defaultValue={""}
+                    /> */}
+                    </CodeMirror>
+                  </div>
                 </div>
-                <hr />
-                <div className="task-desc-wrap">
-                  <textarea
-                    className="task-desc-field"
-                    name
-                    id
-                    placeholder="Description"
-                    defaultValue={""}
-                  />
-                </div>
-              </div>
+              </form>
               {/* /.modal-body */}
             </div>
             {/* /.modal-content */}
@@ -226,4 +251,7 @@ export default class CodeSnippet extends Component {
       </React.Fragment>
     );
   }
+  updateCode = updateCode => {
+    this.setState({ code: updateCode });
+  };
 }
