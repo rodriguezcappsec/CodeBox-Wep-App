@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import "codemirror/lib/codemirror.css";
-import beautify from "beautify";
 require("codemirror/mode/xml/xml.js");
 require("codemirror/mode/javascript/javascript.js");
 require("codemirror/theme/material.css");
@@ -127,7 +126,6 @@ export default class CodeSnippet extends Component {
             {/* /.app-panel-inner  */}
             {/* panel-toggle button */}
             <a
-              href="#"
               className="app-panel-toggle"
               data-toggle="class"
               data-target="#app-panel"
@@ -165,7 +163,7 @@ export default class CodeSnippet extends Component {
           id="projects-task-modal"
           tabIndex={-1}
           role="dialog"
-          aria-divledby="myModaldiv"
+          // aria-divledby="myModaldiv"
           aria-hidden="true"
         >
           <div className="modal-dialog" role="document">
@@ -200,8 +198,8 @@ export default class CodeSnippet extends Component {
                   <div className="row">
                     <div className="col">
                       <div className="form-group">
-                        <select name="country" class="form-control">
-                          <option selected="">Theme</option>
+                        <select name="country" className="form-control">
+                          <option defaultValue>Theme</option>
                           <option value="egypt">Egypt</option>
                           <option value="usa">USA</option>
                           <option value="germany">Germany</option>
@@ -211,8 +209,8 @@ export default class CodeSnippet extends Component {
                     </div>
                     <div className="col">
                       <div className="form-group">
-                        <select name="country" class="form-control">
-                          <option selected="">Language</option>
+                        <select name="country" className="form-control">
+                          <option defaultValue>Language</option>
                           <option value="egypt">Egypt</option>
                           <option value="usa">USA</option>
                           <option value="germany">Germany</option>

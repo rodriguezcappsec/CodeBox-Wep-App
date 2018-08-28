@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 
 class NavBar extends Component {
-  componentDidMount() {
-    console.log(this.props);
-  }
   render() {
     return (
       <React.Fragment>

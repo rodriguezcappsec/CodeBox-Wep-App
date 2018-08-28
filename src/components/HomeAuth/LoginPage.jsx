@@ -93,34 +93,3 @@ class LoginPage extends Component {
   }
 }
 export default LoginPage;
-{/* <div className="sweet-alert showSweetAlert visible" data-custom-class data-has-cancel-button="false" data-has-confirm-button="true" data-allow-outside-click="false" data-has-done-function="false" data-animation="pop" data-timer="null" style={{ display: 'block', marginTop: '-116px' }}><div className="sa-icon sa-error" style={{ display: 'none' }}>
-    <span className="sa-x-mark">
-        <span className="sa-line sa-left" />
-        <span className="sa-line sa-right" />
-    </span>
-</div><div className="sa-icon sa-warning" style={{ display: 'none' }}>
-        <span className="sa-body" />
-        <span className="sa-dot" />
-    </div><div className="sa-icon sa-info" style={{ display: 'none' }} /><div className="sa-icon sa-success" style={{ display: 'none' }}>
-        <span className="sa-line sa-tip" />
-        <span className="sa-line sa-long" />
-        <div className="sa-placeholder" />
-        <div className="sa-fix" />
-    </div><div className="sa-icon sa-custom" style={{ display: 'none' }} /><h2>Here's a message!</h2>
-    <p style={{ display: 'block' }}>It's pretty, isn't it?</p>
-    <fieldset>
-        <input tabIndex={3} placeholder type="text" />
-        <div className="sa-input-error" />
-    </fieldset><div className="sa-error-container">
-        <div className="icon">!</div>
-        <p>Not valid!</p>
-    </div><div className="sa-button-container">
-        <button className="cancel" tabIndex={2} style={{ display: 'none', boxShadow: 'none' }}>Cancel</button>
-        <div className="sa-confirm-button-container">
-            <button className="confirm" tabIndex={1} style={{ display: 'inline-block', backgroundColor: 'rgb(140, 212, 245)', boxShadow: 'rgba(140, 212, 245, 0.8) 0px 0px 2px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px inset' }}>OK</button><div className="la-ball-fall">
-                <div />
-                <div />
-                <div />
-            </div>
-        </div>
-    </div></div> */}
