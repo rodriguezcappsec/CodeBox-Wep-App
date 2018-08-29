@@ -34,17 +34,19 @@ export default class CodeSnippet extends Component {
       list: {
         codeList: [],
         selectedSnippet: ""
-      }
+      },
+      editID: ""
     };
   }
-  snippetName = ({ currentTarget: input }) => {
-    this.setState({ snippetname: input.value });
+  getID = ({ target }) => {
+    console.log(target.id);
+    this.setState({ editID: target.id });
   };
   createSnippet = onsubmit => {
     onsubmit.preventDefault();
     let copy = { ...this.state.code };
     copy = this.state.code.replace(/"/g, "'");
-    // copy = copy.replace(/\n/g, " ");
+    copy = copy.replace(/\n/g, " ");
     Axios.post(
       `${apiUrl}/codes`,
       {
@@ -73,15 +75,19 @@ export default class CodeSnippet extends Component {
       headers: {
         Authorization: "Bearer " + this.state.user.token
       }
-    }).then(codes => {
-      let code = codes.data.codes.filter(
-        code => code.userID === this.state.user._id
-      );
-      console.log(code);
-      let listCopy = { ...this.state.list };
-      listCopy.codeList = code;
-      this.setState({ list: listCopy });
-    });
+    })
+      .then(codes => {
+        let code = codes.data.codes.filter(
+          code => code.userID === this.state.user._id
+        );
+        console.log(code);
+        let listCopy = { ...this.state.list };
+        listCopy.codeList = code;
+        this.setState({ list: listCopy });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
   componentDidMount() {
     this.renderCodeList();
@@ -98,21 +104,59 @@ export default class CodeSnippet extends Component {
     console.log(options.mode);
     this.setState({ options });
   };
+  snippetName = ({ currentTarget: input }) => {
+    this.setState({ snippetname: input.value });
+    console.log(this.state.snippetname);
+  };
+  deleteSnippet = ({ currentTarget: input }) => {
+    Axios.delete(`${apiUrl}/codes/${input.id}`, {
+      headers: {
+        Authorization: "Bearer " + this.state.user.token
+      }
+    })
+      .then(codes => {
+        this.renderCodeList();
+      })
+      .catch(err => {
+        console.log("error trying to delete");
+      });
+  };
+  editSnippet = onsubmit => {
+    onsubmit.preventDefault();
+    let copy = { ...this.state.code };
+    copy = this.state.code.replace(/"/g, "'");
+    copy = copy.replace(/\n/g, " ");
 
+    Axios.patch(
+      `${apiUrl}/codes/${this.state.editID}`,
+      {
+        code: {
+          title: this.state.snippetname,
+          snippet: `${copy}`,
+          theme: this.state.options.theme,
+          language: this.state.options.mode
+        }
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + this.state.user.token
+        }
+      }
+    )
+      .then(codes => {
+        this.renderCodeList();
+        console.log(codes);
+      })
+      .catch(err => {
+        console.log("error trying to edit");
+      });
+  };
   render() {
     return (
       <React.Fragment>
+        {this.editSnippetModal()}
         <div className="app-wrapper">
           <div className="app-panel" id="app-panel">
-            {/* <div className="app-search">
-              <input
-                className="search-field"
-                placeholder="Search"
-                type="search"
-              />
-              <i className="search-icon fa fa-search" />
-            </div> */}
-            {/* /.app-search */}
             <div className="app-panel-inner">
               <div className="scroll-container">
                 <div className="p-3">
@@ -128,54 +172,39 @@ export default class CodeSnippet extends Component {
                 <div className="projects-list">
                   {this.state.list.codeList.map((code, key) => {
                     return (
-                      <div className="media" key={key} id={code._id}>
-                        {/* <div
-                          className="avatar avatar-circle avatar-md project-icon"
-                          data-plugin="firstLitter"
-                          data-target="#project-1"
-                        /> */}
-                        <div className="media-body">
-                          <h6 className="project-name" id="project-1">
-                            {code.title}
-                          </h6>
-                        </div>
-                        <div className="row">
-                          <div className="col">
+                      <div className="row" key={key}>
+                        <div className="media col" id={code._id}>
+                          <div className="media-body">
+                            <h6 className="project-name" id="project-1">
+                              {code.title}
+                            </h6>
+                          </div>
+                          <div className="col-md-2">
                             <input
-                              name="submit"
+                              name="editSnippet"
                               defaultValue="edit"
                               id={code._id}
                               className="btn btn-warning btn-small"
-                              type="submit"
+                              onClick={this.getID}
+                              type="button"
+                              data-toggle="modal"
+                              data-target="#projects-edittask-modal"
                             />
                           </div>
                           <div className="col">
                             <input
-                              name="submit"
-                              defaultValue="edit"
+                              name="deleteSnippet"
+                              defaultValue="delete"
                               id={code._id}
                               className="btn btn-danger btn-small"
-                              type="submit"
+                              type="button"
+                              onClick={this.deleteSnippet}
                             />
                           </div>
                         </div>
                       </div>
                     );
                   })}
-                  {/* <div className="media selected">
-                    <div
-                      className="avatar avatar-circle avatar-md project-icon"
-                      data-plugin="firstLitter"
-                      data-target="#project-1"
-                    />
-                    <div className="media-body">
-                      <h6 className="project-name" id="project-1">
-                        Android App Project
-                      </h6>
-                    </div>
-                  </div> */}
-
-                  {/* /.media */}
                 </div>
                 {/* /.projects-list */}
               </div>
@@ -227,7 +256,7 @@ export default class CodeSnippet extends Component {
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <p color="secondary">20 character max for the title</p>
+                <p color="secondary">20 character max for the snippet name</p>
 
                 <div className="task-pickers" />
               </div>
@@ -315,17 +344,7 @@ export default class CodeSnippet extends Component {
                       onBeforeChange={(editor, data, code) => {
                         this.setState({ code });
                       }}
-
-                      // onChange={this.updateCode}
-                    >
-                      {/* <textarea
-                      className="task-desc-field"
-                      name
-                      id
-                      placeholder="Description"
-                      defaultValue={""}
-                    /> */}
-                    </CodeMirror>
+                    />
                   </div>
                 </div>
                 <div className="row">
@@ -350,7 +369,115 @@ export default class CodeSnippet extends Component {
       </React.Fragment>
     );
   }
-  updateCode = updateCode => {
-    this.setState({ code: updateCode });
+  editSnippetModal = () => {
+    return (
+      <div
+        className="modal fade"
+        id="projects-edittask-modal"
+        tabIndex={-1}
+        role="dialog"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <p color="secondary">20 character max for the snippet name</p>
+              <div className="task-pickers" />
+            </div>
+            <form onSubmit={this.editSnippet} name="createNippetForm">
+              <div className="modal-body">
+                <div className="task-name-wrap">
+                  <span>
+                    <i className="zmdi zmdi-check" />
+                  </span>
+                  <input
+                    className="task-name-field"
+                    placeholder="New Snippet Name"
+                    name="snippetname"
+                    type="text"
+                    maxLength="20"
+                    onChange={this.snippetName}
+                  />
+                </div>
+                <hr />
+                <div className="row">
+                  <div className="col">
+                    <div className="form-group">
+                      <select
+                        name="theme"
+                        className="form-control"
+                        onChange={this.pickTheme}
+                      >
+                        <option defaultValue>Theme</option>
+                        {[
+                          "xq-light",
+                          "monokai",
+                          "material",
+                          "dracula",
+                          "cobalt",
+                          "midnight"
+                        ].map((value, key) => (
+                          <option value={value} key={key}>
+                            {value}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="form-group">
+                      <select
+                        name="mode"
+                        className="form-control"
+                        onChange={this.pickCode}
+                      >
+                        <option defaultValue>Languages</option>
+                        {[
+                          "javascript",
+                          "ruby",
+                          "saas",
+                          "sas",
+                          "shell",
+                          "sql",
+                          "xml",
+                          "python"
+                        ].map((language, key) => (
+                          <option value={language} key={key}>
+                            {language}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="task-desc-wrap">
+                  <CodeMirror
+                    value={this.state.code}
+                    options={this.state.options}
+                    onBeforeChange={(editor, data, code) => {
+                      this.setState({ code });
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="row">
+                <div className="col">
+                  <input
+                    name="submit"
+                    defaultValue="Create Snippet"
+                    className="btn btn-primary btn-block btn-flat"
+                    type="submit"
+                  />
+                </div>
+              </div>
+            </form>
+            {/* /.modal-body */}
+          </div>
+          {/* /.modal-content */}
+        </div>
+        {/* /.modal-dialog */}
+      </div>
+    );
   };
 }
