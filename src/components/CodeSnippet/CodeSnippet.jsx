@@ -3,6 +3,7 @@ import { Controlled as CodeMirror } from "react-codemirror2";
 import "codemirror/lib/codemirror.css";
 import Axios from "axios";
 import apiUrl from "../../endPoint.js";
+import swal from "sweetalert";
 require("codemirror/mode/xml/xml.js");
 require("codemirror/mode/javascript/javascript.js");
 require("codemirror/mode/ruby/ruby.js");
@@ -26,29 +27,42 @@ export default class CodeSnippet extends Component {
       user: this.props.user,
       code: "",
       snippetname: "",
-      options: {
-        mode: "",
-        theme: "",
-        lineNumbers: true
-      },
-      list: {
-        codeList: [],
-        selectedSnippet: ""
-      },
+      options: { mode: "", theme: "", lineNumbers: true },
+      list: { codeList: [], selectedSnippet: "" },
       editID: "",
-      showCode: {
-        code: "",
-        language: "",
-        theme: "",
-        showEditor: false
-      }
+      showCode: { code: "", language: "", theme: "", showEditor: false }
     };
   }
+  validateCreateForm = () => {
+    const { code, snippetname } = this.state;
+    if (code === "" || snippetname === "") {
+      swal("Oh oh!!", "Code snippet or snippet name cannot be empty", "error");
+      return;
+    }
+    swal(
+      "Good Job!!",
+      "Snippet Created!, you can continue adding more.. ",
+      "success"
+    );
+  };
+  validateEditForm = () => {
+    const { code, snippetname } = this.state;
+    if (code === "" || snippetname === "") {
+      swal("Oh oh!!", "Code snippet or snippet name cannot be empty", "error");
+      return;
+    }
+    swal(
+      "Good Job Editing!!",
+      "Snippet Edited!, you can continue editing it more.. ",
+      "success"
+    );
+  };
   getID = ({ target }) => {
     this.setState({ editID: target.id });
   };
   createSnippet = onsubmit => {
     onsubmit.preventDefault();
+    this.validateCreateForm();
     let copy = {
       ...this.state.code
     };
@@ -72,10 +86,52 @@ export default class CodeSnippet extends Component {
     )
       .then(code => {
         this.renderCodeList();
+        this.setState({ snippetName: "" });
+        this.setState({ code: "" });
+        document.getElementsByClassName("task-name-field").value = "";
       })
       .catch(exe => {
         console.log(exe);
       });
+  };
+  editSnippet = onsubmit => {
+    onsubmit.preventDefault();
+    this.validateEditForm();
+    const { code, snippetname } = this.state;
+    if (code === "" || snippetname === "") {
+      swal("Oh oh!!", "Code snippet or snippet name cannot be empty", "error");
+      return;
+    } else {
+      let copy = {
+        ...this.state.code
+      };
+      copy = this.state.code.replace(/"/g, "'");
+      Axios.patch(
+        `${apiUrl}/codes/${this.state.editID}`,
+        {
+          code: {
+            title: this.state.snippetname,
+            snippet: `${copy}`,
+            theme: this.state.options.theme,
+            language: this.state.options.mode
+          }
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + this.state.user.token
+          }
+        }
+      )
+        .then(codes => {
+          this.renderCodeList();
+          this.setState({ snippetName: "" });
+          this.setState({ code: "" });
+          document.getElementsByClassName("task-edittask-field").value = "";
+        })
+        .catch(err => {
+          console.log("error trying to edit");
+        });
+    }
   };
   renderCodeList = () => {
     Axios.get(`${apiUrl}/codes`, {
@@ -131,37 +187,7 @@ export default class CodeSnippet extends Component {
         console.log("error trying to delete");
       });
   };
-  editSnippet = onsubmit => {
-    onsubmit.preventDefault();
-    let copy = {
-      ...this.state.code
-    };
-    copy = this.state.code.replace(/"/g, "'");
-    copy = copy.replace(/\n/g, " ");
 
-    Axios.patch(
-      `${apiUrl}/codes/${this.state.editID}`,
-      {
-        code: {
-          title: this.state.snippetname,
-          snippet: `${copy}`,
-          theme: this.state.options.theme,
-          language: this.state.options.mode
-        }
-      },
-      {
-        headers: {
-          Authorization: "Bearer " + this.state.user.token
-        }
-      }
-    )
-      .then(codes => {
-        this.renderCodeList();
-      })
-      .catch(err => {
-        console.log("error trying to edit");
-      });
-  };
   render() {
     return (
       <React.Fragment>
@@ -277,11 +303,8 @@ export default class CodeSnippet extends Component {
                   20 character max for the snippet name. <br /> Code Formatting
                   still in development, please try to format it yourself.
                 </p>
-                <p color="secondary" />
                 <div className="task-pickers" />
               </div>
-              {/* /.modal-header */}
-
               <form onSubmit={this.createSnippet} name="createNippetForm">
                 <div className="modal-body">
                   <div className="task-name-wrap">
@@ -410,12 +433,20 @@ export default class CodeSnippet extends Component {
       });
   };
   editSnippetModal = () => {
-    return <div className="modal fade" id="projects-edittask-modal" tabIndex={-1} role="dialog" aria-hidden="true">
+    return (
+      <div
+        className="modal fade"
+        id="projects-edittask-modal"
+        tabIndex={-1}
+        role="dialog"
+        aria-hidden="true"
+      >
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
               <p color="secondary">
-                20 character max for the snippet name. <br /> Code Formatting still in development, please try to format it yourself.
+                20 character max for the snippet name. <br /> Code Formatting
+                still in development, please try to format it yourself.
               </p>
               <div className="task-pickers" />
             </div>
@@ -425,49 +456,85 @@ export default class CodeSnippet extends Component {
                   <span>
                     <i className="zmdi zmdi-check" />
                   </span>
-                  <input className="task-name-field" placeholder="New Snippet Name" name="snippetname" type="text" maxLength="20" onChange={this.snippetName} />
+                  <input
+                    className="task-name-field"
+                    placeholder="New Snippet Name"
+                    name="snippetname"
+                    type="text"
+                    maxLength="20"
+                    onChange={this.snippetName}
+                  />
                 </div>
                 <hr />
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                      <select name="theme" className="form-control" onChange={this.pickTheme}>
+                      <select
+                        name="theme"
+                        className="form-control"
+                        onChange={this.pickTheme}
+                      >
                         <option defaultValue>Theme</option>
-                        {["xq-light", "monokai", "material", "dracula", "cobalt", "midnight"].map(
-                          (value, key) => (
-                            <option value={value} key={key}>
-                              {value}
-                            </option>
-                          )
-                        )}
+                        {[
+                          "xq-light",
+                          "monokai",
+                          "material",
+                          "dracula",
+                          "cobalt",
+                          "midnight"
+                        ].map((value, key) => (
+                          <option value={value} key={key}>
+                            {value}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
                   <div className="col">
                     <div className="form-group">
-                      <select name="mode" className="form-control" onChange={this.pickCode} >
+                      <select
+                        name="mode"
+                        className="form-control"
+                        onChange={this.pickCode}
+                      >
                         <option defaultValue>Languages</option>
-                        {["javascript", "ruby", "saas", "sas", "shell", "sql", "xml", "python"].map(
-                          (language, key) => (
-                            <option value={language} key={key}>
-                              {language}
-                            </option>
-                          )
-                        )}
+                        {[
+                          "javascript",
+                          "ruby",
+                          "saas",
+                          "sas",
+                          "shell",
+                          "sql",
+                          "xml",
+                          "python"
+                        ].map((language, key) => (
+                          <option value={language} key={key}>
+                            {language}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
                 </div>
 
                 <div className="task-desc-wrap">
-                  <CodeMirror value={this.state.code} options={this.state.options} onBeforeChange={(editor, data, code) => {
+                  <CodeMirror
+                    value={this.state.code}
+                    options={this.state.options}
+                    onBeforeChange={(editor, data, code) => {
                       this.setState({ code });
-                    }} />
+                    }}
+                  />
                 </div>
               </div>
               <div className="row">
                 <div className="col">
-                  <input name="submit" defaultValue="Create Snippet" className="btn btn-primary btn-block btn-flat" type="submit" />
+                  <input
+                    name="submit"
+                    defaultValue="Create Snippet"
+                    className="btn btn-primary btn-block btn-flat"
+                    type="submit"
+                  />
                 </div>
               </div>
             </form>
@@ -476,6 +543,7 @@ export default class CodeSnippet extends Component {
           {/* /.modal-content */}
         </div>
         {/* /.modal-dialog */}
-      </div>;
+      </div>
+    );
   };
 }
