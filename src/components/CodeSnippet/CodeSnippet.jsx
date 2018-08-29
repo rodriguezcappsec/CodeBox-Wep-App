@@ -3,6 +3,7 @@ import { Controlled as CodeMirror } from "react-codemirror2";
 import "codemirror/lib/codemirror.css";
 import Axios from "axios";
 import apiUrl from "../../endPoint.js";
+import { Route, Link } from "react-router-dom";
 require("codemirror/mode/xml/xml.js");
 require("codemirror/mode/javascript/javascript.js");
 require("codemirror/mode/ruby/ruby.js");
@@ -35,7 +36,12 @@ export default class CodeSnippet extends Component {
         codeList: [],
         selectedSnippet: ""
       },
-      editID: ""
+      editID: "",
+      showCode: {
+        code: "",
+        language: "",
+        theme: ""
+      }
     };
   }
   getID = ({ target }) => {
@@ -43,9 +49,11 @@ export default class CodeSnippet extends Component {
   };
   createSnippet = onsubmit => {
     onsubmit.preventDefault();
-    let copy = { ...this.state.code };
+    let copy = {
+      ...this.state.code
+    };
     copy = this.state.code.replace(/"/g, "'");
-    copy = copy.replace(/\n/g, " ");
+    // copy = copy.replace(/\n/g, " ");
     Axios.post(
       `${apiUrl}/codes`,
       {
@@ -80,7 +88,9 @@ export default class CodeSnippet extends Component {
           code => code.userID === this.state.user._id
         );
         console.log(code);
-        let listCopy = { ...this.state.list };
+        let listCopy = {
+          ...this.state.list
+        };
         listCopy.codeList = code;
         this.setState({ list: listCopy });
       })
@@ -92,20 +102,21 @@ export default class CodeSnippet extends Component {
     this.renderCodeList();
   }
   pickTheme = ({ target: input }) => {
-    const options = { ...this.state.options };
+    const options = {
+      ...this.state.options
+    };
     options.theme = input.value;
-    console.log(options.theme);
     this.setState({ options });
   };
   pickCode = ({ target: input }) => {
-    const options = { ...this.state.options };
+    const options = {
+      ...this.state.options
+    };
     options.mode = input.value;
-    console.log(options.mode);
     this.setState({ options });
   };
   snippetName = ({ currentTarget: input }) => {
     this.setState({ snippetname: input.value });
-    console.log(this.state.snippetname);
   };
   deleteSnippet = ({ currentTarget: input }) => {
     Axios.delete(`${apiUrl}/codes/${input.id}`, {
@@ -122,7 +133,9 @@ export default class CodeSnippet extends Component {
   };
   editSnippet = onsubmit => {
     onsubmit.preventDefault();
-    let copy = { ...this.state.code };
+    let copy = {
+      ...this.state.code
+    };
     copy = this.state.code.replace(/"/g, "'");
     copy = copy.replace(/\n/g, " ");
 
@@ -171,9 +184,13 @@ export default class CodeSnippet extends Component {
                   {this.state.list.codeList.map((code, key) => {
                     return (
                       <div className="row" key={key}>
-                        <div className="media col" id={code._id}>
+                        <div className="media col">
                           <div className="media-body">
-                            <h6 className="project-name" id="project-1">
+                            <h6
+                              className="project-name"
+                              id={code._id}
+                              onClick={this.showSnippet}
+                            >
                               {code.title}
                             </h6>
                           </div>
@@ -228,14 +245,16 @@ export default class CodeSnippet extends Component {
             {/* /.app-main-header */}
             <div className="app-main-content">
               <div className="project-tasks">
-                {/* <div className="project-task">
-                  <div className="checkbox checkbox-circle checkbox-lg">
-                    <input id="pj-task-1" type="checkbox" />
-                    <label htmlFor="pj-task-1">
-                      Project initiation and proposal preparing
-                    </label>
-                  </div>
-                </div> */}
+                <div className="project-task">
+                  <CodeMirror
+                    value={this.state.showCode.code}
+                    options={{
+                      mode: this.state.showCode.language,
+                      theme: this.state.showCode.theme,
+                      lineNumbers: true
+                    }}
+                  />
+                </div>
               </div>
               {/* /.project-tasks */}
             </div>
@@ -247,8 +266,7 @@ export default class CodeSnippet extends Component {
           className="modal fade"
           id="projects-task-modal"
           tabIndex={-1}
-          role="dialog"
-          // aria-divledby="myModaldiv"
+          role="dialog" // aria-divledby="myModaldiv"
           aria-hidden="true"
         >
           <div className="modal-dialog" role="document">
@@ -367,6 +385,23 @@ export default class CodeSnippet extends Component {
       </React.Fragment>
     );
   }
+  showSnippet = ({ target }) => {
+    Axios.get(`${apiUrl}/codes/${target.id}`, {
+      headers: {
+        Authorization: "Bearer " + this.state.user.token
+      }
+    })
+      .then(codes => {
+        let code = { ...this.state.showCode };
+        code.code = codes.data.code.snippet;
+        code.language = codes.data.code.language;
+        code.theme = codes.data.code.theme;
+        this.setState({ showCode: code });
+      })
+      .catch(err => {
+        console.log("error trying to edit");
+      });
+  };
   editSnippetModal = () => {
     return (
       <div
