@@ -39,7 +39,6 @@ export default class CodeSnippet extends Component {
     };
   }
   getID = ({ target }) => {
-    console.log(target.id);
     this.setState({ editID: target.id });
   };
   createSnippet = onsubmit => {
@@ -145,7 +144,6 @@ export default class CodeSnippet extends Component {
     )
       .then(codes => {
         this.renderCodeList();
-        console.log(codes);
       })
       .catch(err => {
         console.log("error trying to edit");
