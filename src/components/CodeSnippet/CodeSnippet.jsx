@@ -147,7 +147,6 @@ export default class CodeSnippet extends Component {
         let code = codes.data.codes.filter(
           code => code.userID === this.state.user._id
         );
-        console.log(code);
         let listCopy = {
           ...this.state.list
         };

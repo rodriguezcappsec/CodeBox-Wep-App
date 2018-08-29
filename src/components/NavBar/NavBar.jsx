@@ -55,7 +55,7 @@ class NavBar extends Component {
               </li>
             </ul>
             <ul className="navbar-nav">
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <div id="navbar-search" className="navbar-search">
                   <form className="form-inline navbar-search-form">
                     <input
@@ -80,8 +80,7 @@ class NavBar extends Component {
                     data-toggle="navbar-search"
                   />
                 </div>
-                {/* /.navbar-search */}
-              </li>
+              </li> */}
               <li
                 id="navbar-search-toggler"
                 className="nav-item hidden-xl-up hidden-sm-down"
