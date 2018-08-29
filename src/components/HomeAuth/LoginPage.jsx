@@ -4,6 +4,7 @@ import LoginForms from "./LoginForms.jsx";
 import App from "../../App.js";
 import Axios from "axios";
 import "../../index.css";
+import swal from "sweetalert";
 
 class LoginPage extends Component {
   constructor(props) {
@@ -35,13 +36,13 @@ class LoginPage extends Component {
     })
       .then(user => {
         let loggedUser = { ...this.state.signedUser };
-        // loggedUser.currentUser = user.data;
         this.setState({ currentUser: user.data });
         this.setState({ islogged: true });
         this.setState({ signedUser: loggedUser });
+        swal(`Welcome! ${user.data.user.userName}`, "", "success");
       })
       .catch(exe => {
-        console.log(exe);
+        swal("Oh oh!!", "Email or Password are wrong!", "error");
       });
   };
   registerRequest = onSubmit => {
@@ -56,17 +57,16 @@ class LoginPage extends Component {
       }
     })
       .then(user => {
-        console.log("registered");
+        swal(`Good Job!`, "You can now login with your new user!!", "success");
       })
       .catch(exe => {
-        console.log(exe);
+        swal("Oh oh!!", "Some invalid field!", "error");
       });
   };
   handleNewUser = ({ currentTarget: input }) => {
     let newUser = { ...this.state.signUp };
     newUser[input.name] = input.value;
     this.setState({ signUp: newUser });
-    console.log(newUser);
   };
   handleInput = ({ currentTarget: input }) => {
     let user = { ...this.state.signedUser };
