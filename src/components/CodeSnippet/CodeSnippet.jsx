@@ -206,7 +206,6 @@ export default class CodeSnippet extends Component {
       }
     });
   };
-
   render() {
     return (
       <React.Fragment>
@@ -225,45 +224,49 @@ export default class CodeSnippet extends Component {
                 </div>
                 <hr className="m-0" />
                 <div className="projects-list">
-                  {this.state.list.codeList.map((code, key) => {
-                    return (
-                      <div className="row" key={key}>
-                        <div className="media col">
-                          <div className="media-body">
-                            <h6
-                              className="project-name"
-                              id={code._id}
-                              onClick={this.showSnippet}
-                            >
-                              {code.title}
-                            </h6>
-                          </div>
-                          <div className="col-md-2">
-                            <input
-                              name="editSnippet"
-                              defaultValue="edit"
-                              id={code._id}
-                              className="btn btn-warning btn-small"
-                              onClick={this.getID}
-                              type="button"
-                              data-toggle="modal"
-                              data-target="#projects-edittask-modal"
-                            />
-                          </div>
-                          <div className="col">
-                            <input
-                              name="deleteSnippet"
-                              defaultValue="delete"
-                              id={code._id}
-                              className="btn btn-danger btn-small"
-                              type="button"
-                              onClick={this.deleteSnippet}
-                            />
+                  {this.state.list.codeList.length === 0 ? (
+                    <p> No code snippet to show!</p>
+                  ) : (
+                    this.state.list.codeList.map((code, key) => {
+                      return (
+                        <div className="row" key={key}>
+                          <div className="media col">
+                            <div className="media-body">
+                              <h6
+                                className="project-name"
+                                id={code._id}
+                                onClick={this.showSnippet}
+                              >
+                                {code.title}
+                              </h6>
+                            </div>
+                            <div className="col-md-2">
+                              <input
+                                name="editSnippet"
+                                defaultValue="edit"
+                                id={code._id}
+                                className="btn btn-warning btn-small"
+                                onClick={this.getID}
+                                type="button"
+                                data-toggle="modal"
+                                data-target="#projects-edittask-modal"
+                              />
+                            </div>
+                            <div className="col">
+                              <input
+                                name="deleteSnippet"
+                                defaultValue="delete"
+                                id={code._id}
+                                className="btn btn-danger btn-small"
+                                type="button"
+                                onClick={this.deleteSnippet}
+                              />
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })
+                  )}
                 </div>
                 {/* /.projects-list */}
               </div>
@@ -290,7 +293,8 @@ export default class CodeSnippet extends Component {
             <div className="app-main-content">
               <div className="project-tasks">
                 <div className="project-task">
-                  {this.state.showCode.showEditor && (
+                  {this.state.showCode.showEditor &&
+                  this.state.list.codeList.length !== 0 ? (
                     <CodeMirror
                       value={this.state.showCode.code}
                       options={{
@@ -299,6 +303,8 @@ export default class CodeSnippet extends Component {
                         lineNumbers: true
                       }}
                     />
+                  ) : (
+                    ""
                   )}
                 </div>
               </div>
@@ -433,6 +439,7 @@ export default class CodeSnippet extends Component {
       </React.Fragment>
     );
   }
+
   showSnippet = ({ target }) => {
     Axios.get(`${apiUrl}/codes/${target.id}`, {
       headers: {
