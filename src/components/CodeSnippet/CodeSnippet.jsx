@@ -350,7 +350,7 @@ export default class CodeSnippet extends Component {
                       <div className="form-group">
                         <select
                           name="theme"
-                          className="form-control"
+                          className="custom-select"
                           onChange={this.pickTheme}
                         >
                           <option defaultValue>Theme</option>
@@ -377,7 +377,7 @@ export default class CodeSnippet extends Component {
                       <div className="form-group">
                         <select
                           name="mode"
-                          className="form-control"
+                          className="custom-select"
                           onChange={this.pickCode}
                         >
                           <option defaultValue>Languages</option>
@@ -458,20 +458,12 @@ export default class CodeSnippet extends Component {
       });
   };
   editSnippetModal = () => {
-    return (
-      <div
-        className="modal fade"
-        id="projects-edittask-modal"
-        tabIndex={-1}
-        role="dialog"
-        aria-hidden="true"
-      >
+    return <div className="modal fade" id="projects-edittask-modal" tabIndex={-1} role="dialog" aria-hidden="true">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
               <p color="secondary">
-                20 character max for the snippet name. <br /> Code Formatting
-                still in development, please try to format it yourself.
+                20 character max for the snippet name. <br /> Code Formatting still in development, please try to format it yourself.
               </p>
               <div className="task-pickers" />
             </div>
@@ -481,85 +473,49 @@ export default class CodeSnippet extends Component {
                   <span>
                     <i className="zmdi zmdi-check" />
                   </span>
-                  <input
-                    className="task-name-field"
-                    placeholder="New Snippet Name"
-                    name="snippetname"
-                    type="text"
-                    maxLength="20"
-                    onChange={this.snippetName}
-                  />
+                  <input className="task-name-field" placeholder="New Snippet Name" name="snippetname" type="text" maxLength="20" onChange={this.snippetName} />
                 </div>
                 <hr />
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                      <select
-                        name="theme"
-                        className="form-control"
-                        onChange={this.pickTheme}
-                      >
+                      <select name="theme" className="custom-select" onChange={this.pickTheme}>
                         <option defaultValue>Theme</option>
-                        {[
-                          "xq-light",
-                          "monokai",
-                          "material",
-                          "dracula",
-                          "cobalt",
-                          "midnight"
-                        ].map((value, key) => (
-                          <option value={value} key={key}>
-                            {value}
-                          </option>
-                        ))}
+                        {["xq-light", "monokai", "material", "dracula", "cobalt", "midnight"].map(
+                          (value, key) => (
+                            <option value={value} key={key}>
+                              {value}
+                            </option>
+                          )
+                        )}
                       </select>
                     </div>
                   </div>
                   <div className="col">
                     <div className="form-group">
-                      <select
-                        name="mode"
-                        className="form-control"
-                        onChange={this.pickCode}
-                      >
+                      <select name="mode" className="custom-select" onChange={this.pickCode}>
                         <option defaultValue>Languages</option>
-                        {[
-                          "javascript",
-                          "ruby",
-                          "saas",
-                          "sas",
-                          "shell",
-                          "sql",
-                          "xml",
-                          "python"
-                        ].map((language, key) => (
-                          <option value={language} key={key}>
-                            {language}
-                          </option>
-                        ))}
+                        {["javascript", "ruby", "saas", "sas", "shell", "sql", "xml", "python"].map(
+                          (language, key) => (
+                            <option value={language} key={key}>
+                              {language}
+                            </option>
+                          )
+                        )}
                       </select>
                     </div>
                   </div>
                 </div>
 
                 <div className="task-desc-wrap">
-                  <CodeMirror
-                    value={this.state.code}
-                    options={this.state.options}
-                    onBeforeChange={(editor, data, code) => {
+                  <CodeMirror value={this.state.code} options={this.state.options} onBeforeChange={(editor, data, code) => {
                       this.setState({ code });
-                    }}
-                  />
+                    }} />
                 </div>
               </div>
               <div className="row">
                 <div className="col">
-                  <input
-                    name="submit"
-                    defaultValue="Create Snippet"
-                    className="btn btn-primary btn-block btn-flat"
-                    type="submit"
-                  />
+                  <input name="submit" defaultValue="Create Snippet" className="btn btn-primary btn-block btn-flat" type="submit" />
                 </div>
               </div>
             </form>
@@ -568,7 +524,6 @@ export default class CodeSnippet extends Component {
           {/* /.modal-content */}
         </div>
         {/* /.modal-dialog */}
-      </div>
-    );
+      </div>;
   };
 }
