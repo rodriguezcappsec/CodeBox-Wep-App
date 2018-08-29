@@ -40,7 +40,8 @@ export default class CodeSnippet extends Component {
       showCode: {
         code: "",
         language: "",
-        theme: ""
+        theme: "",
+        showEditor: false
       }
     };
   }
@@ -246,14 +247,16 @@ export default class CodeSnippet extends Component {
             <div className="app-main-content">
               <div className="project-tasks">
                 <div className="project-task">
-                  <CodeMirror
-                    value={this.state.showCode.code}
-                    options={{
-                      mode: this.state.showCode.language,
-                      theme: this.state.showCode.theme,
-                      lineNumbers: true
-                    }}
-                  />
+                  {this.state.showCode.showEditor && (
+                    <CodeMirror
+                      value={this.state.showCode.code}
+                      options={{
+                        mode: this.state.showCode.language,
+                        theme: this.state.showCode.theme,
+                        lineNumbers: true
+                      }}
+                    />
+                  )}
                 </div>
               </div>
               {/* /.project-tasks */}
@@ -396,6 +399,7 @@ export default class CodeSnippet extends Component {
         code.code = codes.data.code.snippet;
         code.language = codes.data.code.language;
         code.theme = codes.data.code.theme;
+        code.showEditor = true;
         this.setState({ showCode: code });
       })
       .catch(err => {
