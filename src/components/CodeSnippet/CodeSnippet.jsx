@@ -48,7 +48,11 @@ export default class CodeSnippet extends Component {
   validateEditForm = () => {
     const { code, snippetname } = this.state;
     if (code === "" || snippetname === "") {
-      swal("Oh oh!!", "Code snippet or snippet name cannot be empty", "error");
+      swal(
+        "Oh oh!!",
+        "Code snippet or new snippet name cannot be empty",
+        "error"
+      );
       return;
     }
     swal(
@@ -126,7 +130,7 @@ export default class CodeSnippet extends Component {
           this.renderCodeList();
           this.setState({ snippetName: "" });
           this.setState({ code: "" });
-          document.getElementsByClassName("task-edittask-field").value = "";
+          document.getElementsByClassName("task-name-field").value = "";
         })
         .catch(err => {
           console.log("error trying to edit");
@@ -175,17 +179,32 @@ export default class CodeSnippet extends Component {
     this.setState({ snippetname: input.value });
   };
   deleteSnippet = ({ currentTarget: input }) => {
-    Axios.delete(`${apiUrl}/codes/${input.id}`, {
-      headers: {
-        Authorization: "Bearer " + this.state.user.token
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this snippet!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true
+    }).then(willDelete => {
+      if (willDelete) {
+        Axios.delete(`${apiUrl}/codes/${input.id}`, {
+          headers: {
+            Authorization: "Bearer " + this.state.user.token
+          }
+        })
+          .then(codes => {
+            this.renderCodeList();
+          })
+          .catch(err => {
+            console.log("error trying to delete");
+          });
+        swal("Poof! Your snippet has been deleted!", {
+          icon: "success"
+        });
+      } else {
+        swal("Your snippet file is safe!");
       }
-    })
-      .then(codes => {
-        this.renderCodeList();
-      })
-      .catch(err => {
-        console.log("error trying to delete");
-      });
+    });
   };
 
   render() {
