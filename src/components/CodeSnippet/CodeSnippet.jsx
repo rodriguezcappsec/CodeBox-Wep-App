@@ -299,8 +299,10 @@ export default class CodeSnippet extends Component {
                       options={{
                         mode: this.state.showCode.language,
                         theme: this.state.showCode.theme,
-                        lineNumbers: true
-                      }}
+                        lineNumbers: true,
+                        // viewportMargin:
+                        }}
+                      className="CodeMirror-View"
                     />
                   ) : (
                     ""
