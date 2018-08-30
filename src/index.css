@@ -14,35 +14,21 @@
     url(http://fonts.gstatic.com/l/font?kit=Z1ETVwepOmEGkbaFPefd_-CW9eLPAnScftSvRB4WBxg&skey=21884fc543bb1165)
       format("woff2");
 }
+
 body {
-  background: #d2d6de;
-  font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif, Open Sans;
-  font-size: 14px;
+   /* background: #d2d6de; */
+  /* font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif, Open Sans; */
+  /* font-size: 14px; */
   line-height: 1.42857;
-  height: 350px;
+  /* height: 350px; */
   /* padding: 0;
   margin: 0; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-weight: 400;
+  /* font-weight: 400;
   overflow-x: hidden;
-  overflow-y: auto;
-}
-.form-control {
-  background-color: #ffffff;
-  background-image: none;
-  border: 1px solid #999999;
-  border-radius: 0;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-  color: #333333;
-  display: block;
-  font-size: 14px;
-  height: 34px;
-  line-height: 1.42857;
-  padding: 6px 12px;
-  transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-  width: 100%;
-}
+  overflow-y: auto; */
+} 
 
 .login-box,
 .register-box {
@@ -77,9 +63,9 @@ body {
 .has-feedback {
   position: relative;
 }
-.form-group {
+/* .form-group {
   margin-bottom: 15px;
-}
+} */
 .has-feedback .form-control {
   padding-right: 42.5px;
 }

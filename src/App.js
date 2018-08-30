@@ -4,6 +4,7 @@ import SideBar from "./components/SideBar/SideBar.jsx";
 import Slide from "@material-ui/core/Slide";
 import { Route, Switch, Redirect } from "react-router-dom";
 import CodeSnippet from "./components/CodeSnippet/CodeSnippet";
+import "./index.css"
 class App extends Component {
   constructor(props) {
     super(props);
