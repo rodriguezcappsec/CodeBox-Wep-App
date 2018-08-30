@@ -1,6 +1,154 @@
 import React, { Component } from "react";
+import swal from "sweetalert";
+import Axios from "axios";
+import apiUrl from "../../endPoint";
 
-export default class NavBar extends Component {
+class NavBar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+      newPassword: {
+        old: "",
+        new: ""
+      },
+      user: this.props.user
+    };
+  }
+
+  onOpenModal = () => {
+    this.setState({ open: true });
+  };
+
+  onCloseModal = () => {
+    this.setState({ open: false });
+  };
+  handleNewPassword = ({ currentTarget: input }) => {
+    let newPass = { ...this.state.newPassword };
+    newPass[input.name] = input.value;
+    this.setState({ newPassword: newPass });
+    console.log(newPass);
+  };
+  closeModal() {
+    document.getElementById("closeModal").click();
+  }
+  changePasswordRequest = onsubmit => {
+    onsubmit.preventDefault();
+    Axios.patch(
+      `${apiUrl}/change-password`,
+      {
+        passwords: {
+          old: this.state.newPassword.old,
+          new: this.state.newPassword.new
+        }
+      },
+      { headers: { Authorization: "Bearer " + this.state.user.token } }
+    )
+      .then(() => {
+        swal(`Success!!`, "Password was changed succesfully", "success");
+        this.closeModal();
+      })
+      .catch(() => {
+        swal(
+          `Ay no no!!`,
+          "There was an error try to change password",
+          "error"
+        );
+      });
+  };
+  logOutRequest = onsubmit => {
+    onsubmit.preventDefault();
+    Axios.delete(`${apiUrl}/sign-out`, {
+      headers: { Authorization: "Bearer " + this.state.user.token }
+    })
+      .then(() => {
+        window.location.pathname = "";
+      })
+      .catch(() => {});
+  };
+  chagePasswordModal = () => {
+    return (
+      <div
+        className="modal fade"
+        id="exampleModalCenter"
+        tabIndex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="exampleModalCenterTitle">
+                Change Password
+              </h5>
+              <button
+                type="button"
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form onSubmit={this.changePasswordRequest}>
+              <div className="modal-body">
+                <div className="form-group row">
+                  <label
+                    className="col-sm-4 col-form-label text-sm-right"
+                    htmlFor="firstname"
+                  >
+                    <i className="fa fa-eye-slash" aria-hidden="true" />
+                  </label>
+                  <div className="col-md-5 col-sm-8">
+                    <input
+                      className="form-control"
+                      id="old-password"
+                      name="old"
+                      placeholder="Old Password"
+                      type="password"
+                      onChange={this.handleNewPassword}
+                    />
+                  </div>
+                </div>
+                <div className="form-group row">
+                  <label
+                    className="col-sm-4 col-form-label text-sm-right"
+                    htmlFor="firstname"
+                  >
+                    <i className="fa fa-eye-slash" aria-hidden="true" />
+                  </label>
+                  <div className="col-md-5 col-sm-8">
+                    <input
+                      className="form-control"
+                      id="new-password"
+                      name="new"
+                      placeholder="New Password"
+                      type="password"
+                      onChange={this.handleNewPassword}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-dismiss="modal"
+                  id="closeModal"
+                >
+                  Close
+                </button>
+                <button type="submit" className="btn btn-primary">
+                  Save changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  };
   render() {
     return (
       <React.Fragment>
@@ -53,183 +201,8 @@ export default class NavBar extends Component {
                   </span>
                 </button>
               </li>
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <i className="nav-icon fa fa-bell-o" />
-                  <span className="badge badge-circle badge-danger">4</span>
-                </a>
-                <div
-                  className="media-list dropdown-menu p-0"
-                  data-plugin="dropdownCaret"
-                >
-                  <div className="dropdown-item dropdown-menu-cap d-flex">
-                    <span className="mr-auto my-1">
-                      You Have 4 Unread Notifications
-                    </span>
-                    <a className="btn btn-sm btn-light my-1">See all</a>
-                  </div>
-                  <div className="scroll-container">
-                    <a className="media dropdown-item">
-                      <span
-                        className="avatar bg-success"
-                        data-plugin="firstLitter"
-                        data-target="#message-1"
-                      />
-                      <div className="media-body">
-                        <h6 className="media-heading" id="message-1">
-                          Mohamed Ali
-                        </h6>
-                        <small>
-                          Lorem ipsum dolor sit amet, Lorem ipsum dolor.
-                        </small>
-                      </div>
-                    </a>
-                    <a className="media dropdown-item">
-                      <span
-                        className="avatar bg-warning"
-                        data-plugin="firstLitter"
-                        data-target="#message-2"
-                      />
-                      <div className="media-body">
-                        <h6 className="media-heading" id="message-2">
-                          Sophia Smith
-                        </h6>
-                        <small>
-                          Lorem ipsum dolor sit amet, Lorem ipsum dolor.
-                        </small>
-                      </div>
-                    </a>
-                    <a className="media dropdown-item">
-                      <span
-                        className="avatar bg-primary"
-                        data-plugin="firstLitter"
-                        data-target="#message-3"
-                      />
-                      <div className="media-body">
-                        <h6 className="media-heading" id="message-3">
-                          Sarah Adams
-                        </h6>
-                        <small>
-                          Lorem ipsum dolor sit amet, Lorem ipsum dolor.
-                        </small>
-                      </div>
-                    </a>
-                    <a className="media dropdown-item">
-                      <span
-                        className="avatar bg-danger"
-                        data-plugin="firstLitter"
-                        data-target="#message-4"
-                      />
-                      <div className="media-body">
-                        <h6 className="media-heading" id="message-4">
-                          John Doe
-                        </h6>
-                        <small>
-                          Lorem ipsum dolor sit amet, Lorem ipsum dolor.
-                        </small>
-                      </div>
-                    </a>
-                  </div>
-                  {/* /.scroll-container */}
-                </div>
-                {/* /.media-list */}
-              </li>
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <i className="nav-icon fa fa-envelope-o" />
-                  <span className="badge badge-circle badge-success">3</span>
-                </a>
-                <div
-                  className="media-list dropdown-menu p-0"
-                  data-plugin="dropdownCaret"
-                >
-                  <div className="dropdown-item dropdown-menu-cap d-flex">
-                    <span className="mr-auto my-1">
-                      You Have 3 Unread Messages
-                    </span>
-                    <a className="btn btn-sm btn-light my-1">See all</a>
-                  </div>
-                  <div className="scroll-container">
-                    <a className="media dropdown-item">
-                      <div className="avatar">
-                        <img src="../assets/global/images/203.jpg" alt="true" />
-                        <span className="badge badge-success">5</span>
-                      </div>
-                      <div className="media-body">
-                        <h6 className="media-heading">Ahmed Gamal</h6>
-                        <small>
-                          Lorem ipsum dolor sit amet, Lorem ipsum dolor.
-                        </small>
-                      </div>
-                    </a>
-                    <a className="media dropdown-item">
-                      <div className="avatar">
-                        <img src="../assets/global/images/101.jpg" alt="true" />
-                        <span className="badge badge-success">9</span>
-                      </div>
-                      <div className="media-body">
-                        <h6 className="media-heading">Nick Pettit</h6>
-                        <small>
-                          Lorem ipsum dolor sit amet, Lorem ipsum dolor.
-                        </small>
-                      </div>
-                    </a>
-                    <a className="media dropdown-item">
-                      <div className="avatar">
-                        <img src="../assets/global/images/202.jpg" alt="true" />
-                        <span className="badge badge-success">1</span>
-                      </div>
-                      <div className="media-body">
-                        <h6 className="media-heading">Media heading</h6>
-                        <small>
-                          Lorem ipsum dolor sit amet, Lorem ipsum dolor.
-                        </small>
-                      </div>
-                    </a>
-                  </div>
-                  {/* /.scroll-container */}
-                </div>
-                {/* /.media-list */}
-              </li>
             </ul>
             <ul className="navbar-nav">
-              <li className="nav-item">
-                <div id="navbar-search" className="navbar-search">
-                  <form className="form-inline navbar-search-form">
-                    <input
-                      className="form-control navbar-search-field"
-                      type="text"
-                      placeholder="Search"
-                    />
-                    <button type="submit" className="navbar-search-submit">
-                      <svg className="svg-search-icon">
-                        <use xlinkHref="../assets/global/svg-sprite/sprite.svg#search" />
-                      </svg>
-                    </button>
-                    <button
-                      className="navbar-search-close"
-                      data-toggle="navbar-search"
-                    >
-                      <i className="zmdi zmdi-close" />
-                    </button>
-                  </form>
-                  <div
-                    className="navbar-search-backdrop"
-                    data-toggle="navbar-search"
-                  />
-                </div>
-                {/* /.navbar-search */}
-              </li>
               <li
                 id="navbar-search-toggler"
                 className="nav-item hidden-xl-up hidden-sm-down"
@@ -250,35 +223,30 @@ export default class NavBar extends Component {
                     src="../assets/global/images/user-img.png"
                     alt="true"
                   />
-                  <span className="nav-text hidden-sm-down ml-2">Daniel</span>
+                  <span className="nav-text hidden-sm-down ml-2">
+                    {this.state.user.userName}
+                  </span>
                   <i className="nav-caret hidden-sm-down zmdi zmdi-hc-sm zmdi-chevron-down" />
                 </a>
                 <div
                   className="dropdown-menu dropdown-menu-right p-0"
                   data-plugin="dropdownCaret"
                 >
-                  <a className="dropdown-item dropdown-menu-cap">
-                    Daniel Alexander
+                  <a
+                    className="dropdown-item"
+                    style={{ cursor: "pointer" }}
+                    data-toggle="modal"
+                    data-target="#exampleModalCenter"
+                  >
+                    <i className="fa fa-user-secret mr-3" aria-hidden="true" />
+                    <span>Change Password</span>
                   </a>
-                  <a className="dropdown-item">
-                    <i className="fa fa-user-o mr-3" />
-                    <span>My Profile</span>
-                  </a>
-                  <a className="dropdown-item">
-                    <i className="fa fa-list-ul mr-3" />
-                    <span>My Tasks</span>
-                  </a>
-                  <a className="dropdown-item">
-                    <i className="fa fa-envelope-o mr-3" />
-                    <span>My Inbox</span>
-                  </a>
-                  <div className="dropdown-divider" />
-                  <a className="dropdown-item">
-                    <i className="fa fa-file-o mr-3" />
-                    <span>Lock Screen</span>
-                  </a>
-                  <a className="dropdown-item">
-                    <i className="fa fa-power-off mr-3" />
+                  <a
+                    className="dropdown-item"
+                    style={{ cursor: "pointer" }}
+                    onClick={this.logOutRequest}
+                  >
+                    <i className="fa fa-power-off mr-3" aria-hidden="true" />
                     <span>Logout</span>
                   </a>
                 </div>
@@ -286,7 +254,9 @@ export default class NavBar extends Component {
             </ul>
           </div>
         </nav>
+        {this.chagePasswordModal()}
       </React.Fragment>
     );
   }
 }
+export default NavBar;
