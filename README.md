@@ -9,9 +9,7 @@
 
 ### Wireframes
 
-![Login]()
-
-![Dashboard]()
+![DashBoard](https://postimg.cc/image/fqfcb47z1/)
 
 
 ### Challenges creating the front-end
