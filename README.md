@@ -9,7 +9,7 @@
 
 ### Wireframes
 
-![DashBoard](https://postimg.cc/image/fqfcb47z1/)
+![DashBoard](https://s22.postimg.cc/y5zt8im3l/Dash_Board.png)
 
 
 ### Challenges creating the front-end
